@@ -13,7 +13,7 @@ spring:
 eureka:
   instance:
     prefer-ip-address: false
-    hostname: localhost
+    hostname: 35.216.57.113
 
   client:
     register-with-eureka: true

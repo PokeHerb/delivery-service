@@ -1,7 +1,5 @@
 package org.pokeherb.deliveryservice.global.infrastructure.error;
 
-
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
