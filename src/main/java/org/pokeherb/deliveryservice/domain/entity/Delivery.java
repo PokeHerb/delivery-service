@@ -68,9 +68,6 @@ public class Delivery extends Auditable {
     @Column(name = "actual_duration_km")
     private Integer actualDurationKm;
 
-    @Column(name = "deleted_by")
-    private String deletedBy;
-
     @Builder
     private Delivery(
             UUID id,
@@ -85,8 +82,7 @@ public class Delivery extends Auditable {
             UUID receiverSlackId,
             String receiverName,
             Integer actualDurationMin,
-            Integer actualDurationKm,
-            String deletedBy
+            Integer actualDurationKm
     ) {
         this.id = id;
         this.orderId = orderId;
@@ -101,7 +97,6 @@ public class Delivery extends Auditable {
         this.receiverName = receiverName;
         this.actualDurationMin = actualDurationMin;
         this.actualDurationKm = actualDurationKm;
-        this.deletedBy = deletedBy;
     }
 
     /* ============================================================
