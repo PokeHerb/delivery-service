@@ -25,7 +25,7 @@ public class DeliveryQueryServiceImpl implements DeliveryQueryService {
 
     @Transactional(readOnly = true)
     public DeliveryResponseDto getDelivery(UUID deliveryId) {
-        Delivery delivery = deliveryRepository.findByDeliveryId(deliveryId)
+        Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
         return DeliveryResponseDto.from(delivery);
     }

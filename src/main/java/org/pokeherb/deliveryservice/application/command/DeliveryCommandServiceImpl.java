@@ -36,7 +36,7 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
 
     @Transactional
     public void updateStatus(UUID deliveryId, DeliveryStatusUpdateMessageDto requestDto){
-        Delivery delivery = deliveryRepository.findByDeliveryId(deliveryId)
+        Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
         DeliveryStatusUpdateCommand command = requestDto.toCommand(deliveryId);
         delivery.applyStatusUpdate(command);
@@ -44,7 +44,7 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
 
     @Transactional
     public void updateDelivery(UUID deliveryId, DeliveryUpdateRequestDto requestDto){
-        Delivery delivery = deliveryRepository.findByDeliveryId(deliveryId)
+        Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
         DeliveryUpdateCommand command = requestDto.toCommand(deliveryId);
         delivery.update(command);
@@ -52,14 +52,14 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
 
     @Transactional
     public void completeDelivery(UUID deliveryId, Integer actualDurationMin, Integer actualDurationKm) {
-        Delivery delivery = deliveryRepository.findByDeliveryId(deliveryId)
+        Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
         delivery.complete(actualDurationMin, actualDurationKm);
     }
 
     @Transactional
     public void deleteDelivery(UUID deliveryId, String username){
-        Delivery delivery = deliveryRepository.findByDeliveryId(deliveryId)
+        Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
         delivery.delete(username);
     }

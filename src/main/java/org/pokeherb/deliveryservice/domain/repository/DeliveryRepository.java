@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface DeliveryRepository{
     Delivery save(Delivery delivery);
 
-    Optional<Delivery> findByDeliveryId(UUID id);
+    Optional<Delivery> findById(UUID deliveryId);
 
     Optional<Delivery> findByDeliveryStatus(DeliveryStatus status);
 }
