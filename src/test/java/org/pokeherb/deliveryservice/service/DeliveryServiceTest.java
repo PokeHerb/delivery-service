@@ -183,7 +183,7 @@ public class DeliveryServiceTest {
 
         DeliveryStatusUpdateMessageDto pickUp =
                 new DeliveryStatusUpdateMessageDto(
-                        DeliveryStatus.PICKED_UP,
+                        DeliveryStatus.CANCELLED,
                         UUID.randomUUID(),
                         LocalDateTime.now()
                 );
@@ -291,4 +291,152 @@ public class DeliveryServiceTest {
         assertEquals(5, page2.getContent().size());
         assertEquals(2, page2.getNumber());
     }
+
+    @Test
+    @Transactional
+    @DisplayName("검색: soft delete된 배송은 결과에서 제외되어야 한다.")
+    void search_excludeDeleted(){
+        DeliveryCreateResponseDto created1 = deliveryCommandService.createDelivery(createRequest());
+        DeliveryCreateResponseDto created2 = deliveryCommandService.createDelivery(createRequest());
+
+        UUID deleteTargetId = created1.deliveryId();
+        deliveryCommandService.deleteDelivery(deleteTargetId, "tester");
+
+        DeliverySearchConditionRequestDto condition = new DeliverySearchConditionRequestDto(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        Page<DeliverySummaryResponseDto> page = deliveryQueryService.searchDeliveries(condition, PageRequest.of(0,10));
+
+        assertEquals(1, page.getTotalElements());
+        assertTrue(page.getContent().stream()
+                .noneMatch(d -> d.receiverName().equals("삭제대상")));
+    }
+    @Test
+    @Transactional
+    @DisplayName("배송 검색: receiverSlackId 기준")
+    void searchByReceiverSlackId() {
+
+        UUID slackA = UUID.randomUUID();
+        UUID slackB = UUID.randomUUID();
+
+        DeliveryCreateRequestDto dtoA1 = new DeliveryCreateRequestDto(
+                orderId,
+                sequence,
+                startHubId,
+                endHubId,
+                endVendorId,
+                endVendorAddress,
+                slackA,
+                "슬랙A-1"
+        );
+        DeliveryCreateRequestDto dtoA2 = new DeliveryCreateRequestDto(
+                orderId,
+                sequence,
+                startHubId,
+                endHubId,
+                endVendorId,
+                endVendorAddress,
+                slackA,
+                "슬랙A-2"
+        );
+        DeliveryCreateRequestDto dtoB = new DeliveryCreateRequestDto(
+                orderId,
+                sequence,
+                startHubId,
+                endHubId,
+                endVendorId,
+                endVendorAddress,
+                slackB,
+                "슬랙B-1"
+        );
+
+        deliveryCommandService.createDelivery(dtoA1);
+        deliveryCommandService.createDelivery(dtoA2);
+        deliveryCommandService.createDelivery(dtoB);
+
+        DeliverySearchConditionRequestDto condition =
+                new DeliverySearchConditionRequestDto(
+                        null,
+                        null,
+                        null,
+                        null,
+                        slackA,
+                        null
+                );
+
+        Page<DeliverySummaryResponseDto> page =
+                deliveryQueryService.searchDeliveries(condition, PageRequest.of(0, 10));
+
+        assertEquals(2, page.getTotalElements());
+        assertTrue(page.getContent().stream()
+                .allMatch(d -> d.receiverSlackId().equals(slackA)));
+    }
+    @Test
+    @Transactional
+    @DisplayName("배송 검색: orderId 기준")
+    void searchByOrderId() {
+
+        UUID orderA = UUID.randomUUID();
+        UUID orderB = UUID.randomUUID();
+
+        deliveryCommandService.createDelivery(
+                new DeliveryCreateRequestDto(
+                        orderA,
+                        sequence,
+                        startHubId,
+                        endHubId,
+                        endVendorId,
+                        endVendorAddress,
+                        receiverSlackId,
+                        "orderA-1"
+                )
+        );
+        deliveryCommandService.createDelivery(
+                new DeliveryCreateRequestDto(
+                        orderA,
+                        sequence,
+                        startHubId,
+                        endHubId,
+                        endVendorId,
+                        endVendorAddress,
+                        receiverSlackId,
+                        "orderA-2"
+                )
+        );
+        deliveryCommandService.createDelivery(
+                new DeliveryCreateRequestDto(
+                        orderB,
+                        sequence,
+                        startHubId,
+                        endHubId,
+                        endVendorId,
+                        endVendorAddress,
+                        receiverSlackId,
+                        "orderB-1"
+                )
+        );
+
+        DeliverySearchConditionRequestDto condition =
+                new DeliverySearchConditionRequestDto(
+                        null,
+                        null,
+                        null,
+                        null,
+                        orderA,
+                        null
+                );
+
+        Page<DeliverySummaryResponseDto> page =
+                deliveryQueryService.searchDeliveries(condition, PageRequest.of(0, 10));
+
+        assertEquals(2, page.getTotalElements());
+        assertTrue(page.getContent().stream()
+                .allMatch(d -> d.orderId().equals(orderA)));
+    }
+
 }
