@@ -14,7 +14,6 @@ import org.pokeherb.deliveryservice.domain.entity.Delivery;
 import org.pokeherb.deliveryservice.domain.exception.DeliveryErrorCode;
 import org.pokeherb.deliveryservice.domain.repository.DeliveryRepository;
 import org.pokeherb.deliveryservice.global.infrastructure.exception.CustomException;
-import org.pokeherb.deliveryservice.infrastructure.messaging.RouteStatusChangeProducer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +24,7 @@ import java.util.UUID;
 public class DeliveryCommandServiceImpl implements DeliveryCommandService {
 
     private final DeliveryRepository deliveryRepository;
-    private final RouteStatusChangeProducer routeStatusChangeProducer;
+    //private final RouteStatusChangeProducer routeStatusChangeProducer;
 
     @Transactional
     public DeliveryCreateResponseDto createDelivery(DeliveryCreateRequestDto requestDto){
@@ -67,6 +66,6 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
     @Transactional
     public void changeRouteStatus(UUID deliveryId, Long routeId, DeliveryRouteStatusUpdateRequestDto requestDto) {
         RouteStatusChangeCommand command = requestDto.toCommand(routeId, deliveryId);
-        routeStatusChangeProducer.publish(command);
+        //routeStatusChangeProducer.publish(command);
     }
 }

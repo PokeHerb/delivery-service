@@ -7,14 +7,17 @@ import java.util.UUID;
 public record DeliverySummaryResponseDto(
         UUID deliveryId,
         UUID orderId,
-        String receiverName
+        String receiverName,
+        UUID receiverSlackId
+
 ) {
 
     public static DeliverySummaryResponseDto from(Delivery d) {
         return new DeliverySummaryResponseDto(
                 d.getId(),
                 d.getOrderId(),
-                d.getReceiverName()
+                d.getReceiverName(),
+                d.getReceiverSlackId()
         );
     }
 }
