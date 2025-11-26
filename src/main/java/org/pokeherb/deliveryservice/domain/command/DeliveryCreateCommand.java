@@ -11,6 +11,8 @@ public record DeliveryCreateCommand(
         UUID endVendorId,
         String endVendorAddress,
         UUID receiverSlackId,
-        String receiverName
+        String receiverName,
+        Integer expectedDurationMin,
+        Integer expectedDistanceKm
 ) {
 }

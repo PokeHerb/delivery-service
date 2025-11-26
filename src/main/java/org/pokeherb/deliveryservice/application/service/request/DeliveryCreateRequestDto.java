@@ -13,7 +13,9 @@ public record DeliveryCreateRequestDto(
         UUID endVendorId,
         String endVendorAddress,
         UUID receiverSlackId,
-        String receiverName
+        String receiverName,
+        Integer finalDuration,
+        Integer finalDistance
 ) {
     public DeliveryCreateCommand toCommand() {
         return new DeliveryCreateCommand(
@@ -24,7 +26,9 @@ public record DeliveryCreateRequestDto(
                 endVendorId,
                 endVendorAddress,
                 receiverSlackId,
-                receiverName
+                receiverName,
+                finalDuration,
+                finalDistance
         );
     }
 }

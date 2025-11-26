@@ -52,7 +52,6 @@ public class Delivery extends Auditable {
     @Column(name = "delivery_status", length = 30)
     private DeliveryStatus deliveryStatus;
 
-    // ERD 오타(delivey_driver_id) → DB 컬럼 그대로 따라감
     @Column(name = "delivery_driver_id")
     private UUID deliveryDriverId;
 
@@ -68,6 +67,13 @@ public class Delivery extends Auditable {
     @Column(name = "actual_duration_km")
     private Integer actualDurationKm;
 
+    @Column(name = "expected_duration_min")
+    private Integer expectedDurationMin;
+    //finalDuration
+    @Column(name = "expected_distance_km")
+    private Integer expectedDistanceKm;
+    //finalDistance
+
     @Builder
     private Delivery(
             UUID id,
@@ -82,7 +88,9 @@ public class Delivery extends Auditable {
             UUID receiverSlackId,
             String receiverName,
             Integer actualDurationMin,
-            Integer actualDurationKm
+            Integer actualDurationKm,
+            Integer expectedDurationMin,
+            Integer expectedDistanceKm
     ) {
         this.id = id;
         this.orderId = orderId;
@@ -97,6 +105,8 @@ public class Delivery extends Auditable {
         this.receiverName = receiverName;
         this.actualDurationMin = actualDurationMin;
         this.actualDurationKm = actualDurationKm;
+        this.expectedDurationMin = expectedDurationMin;
+        this.expectedDistanceKm = expectedDistanceKm;
     }
 
     /* ============================================================
@@ -114,6 +124,8 @@ public class Delivery extends Auditable {
                 .deliveryStatus(DeliveryStatus.CREATED)
                 .receiverName(command.receiverName())
                 .receiverSlackId(command.receiverSlackId())
+                .expectedDurationMin(command.expectedDurationMin())
+                .expectedDistanceKm(command.expectedDistanceKm())
                 .build();
     }
 
