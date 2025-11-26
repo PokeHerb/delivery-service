@@ -14,10 +14,10 @@ public record DeliveryCompleteRequestDto(
 
         @NotNull
         @Min(0)
-        Integer actualDurationMin,   // 실제 소요 시간(분)
+        Double actualDurationMin,   // 실제 소요 시간(분)
 
         @NotNull
         @Min(0)
-        Integer actualDurationKm     // 실제 이동 거리(km)
+        Double actualDurationKm     // 실제 이동 거리(km)
 ) {
 }

@@ -62,17 +62,30 @@ public class Delivery extends Auditable {
     private String receiverName;
 
     @Column(name = "actual_duration_min")
-    private Integer actualDurationMin;
+    private Double actualDurationMin;
 
     @Column(name = "actual_duration_km")
-    private Integer actualDurationKm;
+    private Double actualDurationKm;
 
     @Column(name = "expected_duration_min")
-    private Integer expectedDurationMin;
+    private Double expectedDurationMin;
     //finalDuration
     @Column(name = "expected_distance_km")
-    private Integer expectedDistanceKm;
+    private Double expectedDistanceKm;
     //finalDistance
+    private UUID productId;
+
+    @Column
+    private LocalDateTime dueAt;
+
+    @Column
+    private UUID orderUserId;
+
+    @Column
+    private String productName;
+
+    @Column
+    private UUID driverId;
 
     @Builder
     private Delivery(
@@ -87,10 +100,15 @@ public class Delivery extends Auditable {
             UUID deliveryDriverId,
             UUID receiverSlackId,
             String receiverName,
-            Integer actualDurationMin,
-            Integer actualDurationKm,
-            Integer expectedDurationMin,
-            Integer expectedDistanceKm
+            Double actualDurationMin,
+            Double actualDurationKm,
+            Double expectedDurationMin,
+            Double expectedDistanceKm,
+            UUID productId,
+            LocalDateTime dueAt,
+            UUID orderUserId,
+            String productName,
+            UUID driverId
     ) {
         this.id = id;
         this.orderId = orderId;
@@ -107,6 +125,11 @@ public class Delivery extends Auditable {
         this.actualDurationKm = actualDurationKm;
         this.expectedDurationMin = expectedDurationMin;
         this.expectedDistanceKm = expectedDistanceKm;
+        this.productId = productId;
+        this.dueAt = dueAt;
+        this.orderUserId = orderUserId;
+        this.productName = productName;
+        this.driverId = driverId;
     }
 
     /* ============================================================
@@ -171,7 +194,7 @@ public class Delivery extends Auditable {
                 : LocalDateTime.now();
     }
 
-    public void complete(Integer durationMin, Integer distanceKm) {
+    public void complete(Double durationMin, Double distanceKm) {
         ensureNotDeleted();
 
         if (!this.deliveryStatus.canComplete()) {

@@ -50,7 +50,7 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
     }
 
     @Transactional
-    public void completeDelivery(UUID deliveryId, Integer actualDurationMin, Integer actualDurationKm) {
+    public void completeDelivery(UUID deliveryId, Double actualDurationMin, Double actualDurationKm) {
         Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
         delivery.complete(actualDurationMin, actualDurationKm);

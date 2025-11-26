@@ -11,8 +11,8 @@ public record DeliveryResponseDto(
         UUID orderId,
         DeliveryStatus deliveryStatus,
         String receiverName,
-        Integer actualDurationMin,
-        Integer actualDurationKm,
+        Double actualDurationMin,
+        Double actualDurationKm,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

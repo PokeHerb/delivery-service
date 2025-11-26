@@ -2,6 +2,7 @@ package org.pokeherb.deliveryservice.application.service.request;
 
 import org.pokeherb.deliveryservice.domain.command.DeliveryCreateCommand;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,8 +15,13 @@ public record DeliveryCreateRequestDto(
         String endVendorAddress,
         UUID receiverSlackId,
         String receiverName,
-        Integer finalDuration,
-        Integer finalDistance
+        Double finalDuration,
+        Double finalDistance,
+        UUID productId,
+        LocalDateTime dueAt,
+        UUID orderUserId,
+        String productName,
+        UUID driverId
 ) {
     public DeliveryCreateCommand toCommand() {
         return new DeliveryCreateCommand(
@@ -28,7 +34,12 @@ public record DeliveryCreateRequestDto(
                 receiverSlackId,
                 receiverName,
                 finalDuration,
-                finalDistance
+                finalDistance,
+                productId,
+                dueAt,
+                orderUserId,
+                productName,
+                driverId
         );
     }
 }

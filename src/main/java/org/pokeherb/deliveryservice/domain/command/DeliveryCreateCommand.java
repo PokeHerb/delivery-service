@@ -1,5 +1,6 @@
 package org.pokeherb.deliveryservice.domain.command;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,12 @@ public record DeliveryCreateCommand(
         String endVendorAddress,
         UUID receiverSlackId,
         String receiverName,
-        Integer expectedDurationMin,
-        Integer expectedDistanceKm
+        Double  expectedDurationMin,
+        Double  expectedDistanceKm,
+        UUID productId,
+        LocalDateTime dueAt,
+        UUID orderUserId,
+        String productName,
+        UUID driverId
 ) {
 }
