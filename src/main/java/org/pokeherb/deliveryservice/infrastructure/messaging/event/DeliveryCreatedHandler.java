@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 ;
 
 @Slf4j
-@Component("delivery.created")
+@Component("delivery.create")
 public class DeliveryCreatedHandler extends AbstractDeliveryEventHandler {
 
     private final DeliveryCommandService deliveryCommandService;

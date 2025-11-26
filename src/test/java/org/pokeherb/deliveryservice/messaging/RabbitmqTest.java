@@ -57,7 +57,7 @@ class RabbitmqTest {
                 "테스트 상품",                 // productName
                 driverId                     // driverId
         );
-        rabbitProducer.publishDeliveryEvent(dto, "delivery.created");
+        rabbitProducer.publishDeliveryEvent(dto, "delivery.create");
     }
 
     @Test
