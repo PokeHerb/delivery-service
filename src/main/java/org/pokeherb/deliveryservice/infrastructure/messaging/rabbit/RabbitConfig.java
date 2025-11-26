@@ -1,4 +1,4 @@
-package org.pokeherb.deliveryservice.infrastructure.messaging;
+package org.pokeherb.deliveryservice.infrastructure.messaging.rabbit;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.BindingBuilder;

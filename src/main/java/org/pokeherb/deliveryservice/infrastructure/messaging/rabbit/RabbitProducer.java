@@ -1,4 +1,4 @@
-package org.pokeherb.deliveryservice.infrastructure.messaging;
+package org.pokeherb.deliveryservice.infrastructure.messaging.rabbit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +18,7 @@ public class RabbitProducer {
 
     private final RabbitTemplate template;
     private final ObjectMapper objectMapper;
+    private final RabbitDeliveryProperties deliveryProperties;
 
     public void publishDeliveryEvent(Object payload, String routingKey) {
         sendMessage("pokeherb", routingKey, payload);
