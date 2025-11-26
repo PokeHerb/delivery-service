@@ -1,4 +1,4 @@
-package org.pokeherb.deliveryservice.infrastructure.messaging.event;
+package org.pokeherb.deliveryservice.infrastructure.messaging.dto;
 
 import org.pokeherb.deliveryservice.domain.entity.RouteStatus;
 
