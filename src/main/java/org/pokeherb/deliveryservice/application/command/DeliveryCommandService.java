@@ -17,5 +17,7 @@ public interface DeliveryCommandService {
 
         void deleteDelivery(UUID deliveryId, String username);
 
+        void completeDelivery(UUID deliveryId, Integer actualDurationMin, Integer actualDurationKm);
+
         void changeRouteStatus(UUID deliveryId, Long routeId, DeliveryRouteStatusUpdateRequestDto requestDto);
 }
