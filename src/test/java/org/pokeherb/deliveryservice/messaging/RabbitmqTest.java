@@ -5,6 +5,7 @@ import org.pokeherb.deliveryservice.application.command.DeliveryCommandService;
 import org.pokeherb.deliveryservice.application.service.request.DeliveryCompleteRequestDto;
 import org.pokeherb.deliveryservice.application.service.request.DeliveryCreateRequestDto;
 import org.pokeherb.deliveryservice.application.service.request.DeliveryStatusUpdateMessageDto;
+import org.pokeherb.deliveryservice.application.service.request.DeliveryUpdateRequestDto;
 import org.pokeherb.deliveryservice.domain.entity.DeliveryStatus;
 import org.pokeherb.deliveryservice.domain.repository.DeliveryRepository;
 import org.pokeherb.deliveryservice.infrastructure.messaging.rabbit.RabbitProducer;
@@ -34,31 +35,37 @@ class RabbitmqTest {
 
         // given
         UUID orderId = UUID.randomUUID();
-        UUID productId = UUID.randomUUID();
-        UUID orderUserId = UUID.randomUUID();
-        UUID endVendorId = UUID.randomUUID();
-        UUID receiverSlackId = UUID.randomUUID();
-        UUID driverId = UUID.randomUUID();
 
         DeliveryCreateRequestDto dto = new DeliveryCreateRequestDto(
-                orderId,
-                List.of(1L, 2L),             // sequence
-                1L,                          // startHubId
-                2L,                          // endHubId
-                endVendorId,                 // endVendorId
-                "테스트 주소",                // endVendorAddress
-                receiverSlackId,             // receiverSlackId
-                "홍길동",                     // receiverName
-                10.0,                        // finalDuration
-                5.0,                         // finalDistance
-                productId,                   // productId
-                LocalDateTime.now().plusDays(3), // dueAt
-                orderUserId,                 // orderUserId
-                "테스트 상품",                 // productName
-                driverId                     // driverId
+                orderId
         );
         rabbitProducer.publishDeliveryEvent(dto, "delivery.create");
     }
+    @Test
+    void sendUpdateDeliveryEvent() throws Exception {
+        UUID orderId = UUID.fromString("29431801-472b-4184-93c4-a4c6a00a7aaa");
+
+        DeliveryUpdateRequestDto dto = new DeliveryUpdateRequestDto(
+                orderId,
+                "홍길동",
+                UUID.randomUUID(),
+                "서울특별시 xxx",
+                List.of(1L, 2L, 3L),
+                10L,
+                20L,
+                UUID.randomUUID(),
+                30.5,
+                12.3,
+                UUID.randomUUID(),
+                LocalDateTime.now().plusHours(2),
+                UUID.randomUUID(),
+                "상품 A",
+                UUID.randomUUID()
+        );
+
+        rabbitProducer.publishDeliveryEvent(dto, "delivery.update");
+    }
+
 
     @Test
     void sendRealDeliveryStatusEvent() throws Exception {
@@ -67,7 +74,6 @@ class RabbitmqTest {
         DeliveryStatusUpdateMessageDto dto = new DeliveryStatusUpdateMessageDto(
                 deliveryId,
                 DeliveryStatus.IN_DELIVERY,
-                UUID.randomUUID(),
                 LocalDateTime.now()
         );
 
