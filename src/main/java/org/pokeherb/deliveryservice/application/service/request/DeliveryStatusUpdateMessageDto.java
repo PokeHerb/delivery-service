@@ -9,7 +9,6 @@ import java.util.UUID;
 public record DeliveryStatusUpdateMessageDto(
         UUID deliveryId,
         DeliveryStatus newStatus,
-        UUID deliveryDriverId,
         LocalDateTime changedAt
 ) {
 
@@ -17,7 +16,6 @@ public record DeliveryStatusUpdateMessageDto(
         return new DeliveryStatusUpdateCommand(
                 deliveryId,
                 newStatus,
-                deliveryDriverId,
                 changedAt
         );
     }

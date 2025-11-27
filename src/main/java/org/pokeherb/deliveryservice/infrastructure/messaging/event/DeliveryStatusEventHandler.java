@@ -22,17 +22,16 @@ public class DeliveryStatusEventHandler extends AbstractDeliveryEventHandler {
     }
 
     public void handle(String payload) {
-        DeliveryStatusUpdateMessageDto event =
-                readPayload(payload, DeliveryStatusUpdateMessageDto.class);
-
         try {
+            DeliveryStatusUpdateMessageDto event =
+                    readPayload(payload, DeliveryStatusUpdateMessageDto.class);
             deliveryCommandService.updateStatus(event.deliveryId(), event);
+            log.info("Delivery status updated via MQ event: deliveryId={}, newStatus={}",
+                    event.deliveryId(), event.newStatus());
         } catch (CustomException e) {
-            log.warn("배송 상태 업데이트 실패 - 존재하지 않는 배송: {}", event.deliveryId(), e);
-            return; // 예외 안 던지면 Rabbit 측에서는 정상 처리로 보고 ACK
+            log.error("Error processing DeliveryStatusEventHandler", e);
+        } catch (Exception e) {
+            log.error("Unexpected error while processing order create MQ. payload={}", payload, e);
         }
-
-        log.info("Delivery status updated via MQ event: deliveryId={}, newStatus={}",
-                event.deliveryId(), event.newStatus());
     }
 }

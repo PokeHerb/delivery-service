@@ -8,7 +8,6 @@ import java.util.UUID;
 public record DeliveryStatusUpdateCommand(
         UUID deliveryId,
         DeliveryStatus newStatus,
-        UUID deliveryDriverId,
         LocalDateTime changedAt
 ) {
 }
