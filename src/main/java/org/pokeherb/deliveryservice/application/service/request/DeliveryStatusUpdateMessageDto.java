@@ -7,14 +7,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record DeliveryStatusUpdateMessageDto(
-        UUID deliveryId,
+        UUID orderId,
         DeliveryStatus newStatus,
         LocalDateTime changedAt
 ) {
 
-    public DeliveryStatusUpdateCommand toCommand(UUID deliveryId) {
+    public DeliveryStatusUpdateCommand toCommand(UUID orderId) {
         return new DeliveryStatusUpdateCommand(
-                deliveryId,
+                orderId,
                 newStatus,
                 changedAt
         );

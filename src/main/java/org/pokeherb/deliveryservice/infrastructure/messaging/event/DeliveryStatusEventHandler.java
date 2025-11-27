@@ -25,9 +25,9 @@ public class DeliveryStatusEventHandler extends AbstractDeliveryEventHandler {
         try {
             DeliveryStatusUpdateMessageDto event =
                     readPayload(payload, DeliveryStatusUpdateMessageDto.class);
-            deliveryCommandService.updateStatus(event.deliveryId(), event);
-            log.info("Delivery status updated via MQ event: deliveryId={}, newStatus={}",
-                    event.deliveryId(), event.newStatus());
+            deliveryCommandService.updateStatus(event);
+            log.info("Delivery status updated via MQ event: orderId={}, newStatus={}",
+                    event.orderId(), event.newStatus());
         } catch (CustomException e) {
             log.error("Error processing DeliveryStatusEventHandler", e);
         } catch (Exception e) {

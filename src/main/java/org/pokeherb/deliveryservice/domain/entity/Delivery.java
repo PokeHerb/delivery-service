@@ -200,16 +200,11 @@ public class Delivery extends Auditable {
 
     public void applyStatusUpdate(DeliveryStatusUpdateCommand command) {
         ensureNotDeleted();
-
         DeliveryStatus newStatus = command.newStatus();
-
         if (!this.deliveryStatus.canTransitionTo(newStatus)) {
             throw new CustomException(DeliveryErrorCode.INVALID_STATUS_TRANSITION);
         }
-
         this.deliveryStatus = newStatus;
-
-
         this.updatedAt = command.changedAt() != null
                 ? command.changedAt()
                 : LocalDateTime.now();

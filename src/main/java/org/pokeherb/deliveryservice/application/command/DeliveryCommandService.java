@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface DeliveryCommandService {
         DeliveryCreateResponseDto createDelivery(DeliveryCreateRequestDto requestDto);
 
-        void updateStatus(UUID deliveryId, DeliveryStatusUpdateMessageDto requestDto);
+        void updateStatus(DeliveryStatusUpdateMessageDto requestDto);
 
         void updateDelivery(DeliveryUpdateRequestDto requestDto);
 

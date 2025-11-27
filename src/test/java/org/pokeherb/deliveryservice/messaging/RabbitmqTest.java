@@ -69,11 +69,11 @@ class RabbitmqTest {
 
     @Test
     void sendRealDeliveryStatusEvent() throws Exception {
-        UUID deliveryId = UUID.fromString("b96866ac-ee16-4ba8-adc4-846df8d15cb0");
+        UUID orderId = UUID.fromString("29431801-472b-4184-93c4-a4c6a00a7aaa");
 
         DeliveryStatusUpdateMessageDto dto = new DeliveryStatusUpdateMessageDto(
-                deliveryId,
-                DeliveryStatus.IN_DELIVERY,
+                orderId,
+                DeliveryStatus.ASSIGNED,
                 LocalDateTime.now()
         );
 

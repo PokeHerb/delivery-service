@@ -84,10 +84,9 @@ public class DeliveryController {
     @PatchMapping("/{deliveryId}/status")
     @PreAuthorize("hasAnyRole('MASTER','HUB_MANAGER','DELIVERY_MANAGER')")
     public CustomResponse<Void> updateDeliveryStatus(
-            @PathVariable UUID deliveryId,
             @RequestBody @Valid DeliveryStatusUpdateMessageDto request
     ) {
-        deliveryCommandService.updateStatus(deliveryId, request);
+        deliveryCommandService.updateStatus(request);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, null);
     }
 
