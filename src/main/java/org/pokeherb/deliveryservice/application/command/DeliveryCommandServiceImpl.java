@@ -42,10 +42,11 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
     }
 
     @Transactional
-    public void updateDelivery(UUID deliveryId, DeliveryUpdateRequestDto requestDto){
-        Delivery delivery = deliveryRepository.findById(deliveryId)
+    public void updateDelivery(DeliveryUpdateRequestDto requestDto){
+        Delivery delivery = deliveryRepository.findByOrderId(requestDto.orderId())
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
-        DeliveryUpdateCommand command = requestDto.toCommand(deliveryId);
+
+        DeliveryUpdateCommand command = requestDto.toCommand();
         delivery.update(command);
     }
 

@@ -13,7 +13,7 @@ public interface DeliveryCommandService {
 
         void updateStatus(UUID deliveryId, DeliveryStatusUpdateMessageDto requestDto);
 
-        void updateDelivery(UUID deliveryId, DeliveryUpdateRequestDto requestDto);
+        void updateDelivery(DeliveryUpdateRequestDto requestDto);
 
         void deleteDelivery(UUID deliveryId, String username);
 
