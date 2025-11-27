@@ -139,16 +139,7 @@ public class Delivery extends Auditable {
     public static Delivery create(DeliveryCreateCommand command) {
         return Delivery.builder()
                 .orderId(command.orderId())
-                .sequence(command.sequence())
-                .startHubId(command.startHubId())
-                .endHubId(command.endHubId())
-                .endVendorId(command.endVendorId())
-                .endVendorAddress(command.endVendorAddress())
                 .deliveryStatus(DeliveryStatus.CREATED)
-                .receiverName(command.receiverName())
-                .receiverSlackId(command.receiverSlackId())
-                .expectedDurationMin(command.expectedDurationMin())
-                .expectedDistanceKm(command.expectedDistanceKm())
                 .build();
     }
 
@@ -157,22 +148,55 @@ public class Delivery extends Auditable {
      ============================================================ */
     public void update(DeliveryUpdateCommand command) {
         ensureNotDeleted();
+
         if (!this.deliveryStatus.isEditable()) {
             throw new CustomException(DeliveryErrorCode.CANNOT_UPDATE_DELIVERY);
         }
-
-        if (command.receiverName() != null && !command.receiverName().isBlank()) {
-            this.receiverName = command.receiverName();
+        if (command.sequence() != null) {
+            this.sequence = command.sequence();
+        }
+        if (command.startHubId() != null) {
+            this.startHubId = command.startHubId();
+        }
+        if (command.endHubId() != null) {
+            this.endHubId = command.endHubId();
+        }
+        if (command.endVendorId() != null) {
+            this.endVendorId = command.endVendorId();
+        }
+        if (command.endVendorAddress() != null && !command.endVendorAddress().isBlank()) {
+            this.endVendorAddress = command.endVendorAddress();
         }
         if (command.receiverSlackId() != null) {
             this.receiverSlackId = command.receiverSlackId();
         }
-        if (command.endVendorAddress() != null) {
-            this.endVendorAddress = command.endVendorAddress();
+        if (command.receiverName() != null && !command.receiverName().isBlank()) {
+            this.receiverName = command.receiverName();
         }
-
+        if (command.expectedDurationMin() != null) {
+            this.expectedDurationMin = command.expectedDurationMin();
+        }
+        if (command.expectedDistanceKm() != null) {
+            this.expectedDistanceKm = command.expectedDistanceKm();
+        }
+        if (command.productId() != null) {
+            this.productId = command.productId();
+        }
+        if (command.dueAt() != null) {
+            this.dueAt = command.dueAt();
+        }
+        if (command.orderUserId() != null) {
+            this.orderUserId = command.orderUserId();
+        }
+        if (command.productName() != null && !command.productName().isBlank()) {
+            this.productName = command.productName();
+        }
+        if (command.driverId() != null) {
+            this.driverId = command.driverId();
+        }
         this.updatedAt = LocalDateTime.now();
     }
+
 
     public void applyStatusUpdate(DeliveryStatusUpdateCommand command) {
         ensureNotDeleted();
@@ -185,9 +209,6 @@ public class Delivery extends Auditable {
 
         this.deliveryStatus = newStatus;
 
-        if (command.deliveryDriverId() != null) {
-            this.deliveryDriverId = command.deliveryDriverId();
-        }
 
         this.updatedAt = command.changedAt() != null
                 ? command.changedAt()
