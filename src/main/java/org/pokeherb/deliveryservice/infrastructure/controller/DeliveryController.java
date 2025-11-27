@@ -68,15 +68,15 @@ public class DeliveryController {
     /* ============================================================
        4. 배송 수정 (부분 업데이트)
      ============================================================ */
-    @PatchMapping("/{deliveryId}")
-    @PreAuthorize("hasAnyRole('MASTER','HUB_MANAGER','DELIVERY_MANAGER')")
-    public CustomResponse<Void> updateDelivery(
-            @PathVariable UUID deliveryId,
-            @RequestBody @Valid DeliveryUpdateRequestDto request
-    ) {
-        deliveryCommandService.updateDelivery(deliveryId, request);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, null);
-    }
+//    @PatchMapping("/{deliveryId}")
+//    @PreAuthorize("hasAnyRole('MASTER','HUB_MANAGER','DELIVERY_MANAGER')")
+//    public CustomResponse<Void> updateDelivery(
+//            @PathVariable UUID deliveryId,
+//            @RequestBody @Valid DeliveryUpdateRequestDto request
+//    ) {
+//        deliveryCommandService.updateDelivery(deliveryId, request);
+//        return CustomResponse.onSuccess(GeneralSuccessCode.OK, null);
+//    }
 
     /* ============================================================
        5. 배송 상태 변경
