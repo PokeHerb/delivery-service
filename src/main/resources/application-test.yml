@@ -1,4 +1,11 @@
 spring:
+  rabbitmq:
+    host: 35.216.57.113
+    port: 5672
+    username: admin
+    password: _aA123456
+    virtual-host: /
+
   config:
     import:
       - optional:file:local.env[.properties]
@@ -13,3 +20,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+  rabbit:
+    delivery:
+      exchange: pokeherb
+      queue: delivery
+      routing-key: "delivery.#"
+
+    hub:
+      exchange: pokeherb
+      queue: hub
+      routing-key: "hub.#"

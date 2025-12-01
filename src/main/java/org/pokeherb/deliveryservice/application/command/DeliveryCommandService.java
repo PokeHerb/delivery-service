@@ -11,13 +11,13 @@ import java.util.UUID;
 public interface DeliveryCommandService {
         DeliveryCreateResponseDto createDelivery(DeliveryCreateRequestDto requestDto);
 
-        void updateStatus(UUID deliveryId, DeliveryStatusUpdateMessageDto requestDto);
+        void updateStatus(DeliveryStatusUpdateMessageDto requestDto);
 
-        void updateDelivery(UUID deliveryId, DeliveryUpdateRequestDto requestDto);
+        void updateDelivery(DeliveryUpdateRequestDto requestDto);
 
         void deleteDelivery(UUID deliveryId, String username);
 
-        void completeDelivery(UUID deliveryId, Integer actualDurationMin, Integer actualDurationKm);
+        void completeDelivery(UUID deliveryId, Double actualDurationMin, Double actualDurationKm);
 
         void changeRouteStatus(UUID deliveryId, Long routeId, DeliveryRouteStatusUpdateRequestDto requestDto);
 }

@@ -6,9 +6,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record DeliveryStatusUpdateCommand(
-        UUID deliveryId,
+        UUID orderId,
         DeliveryStatus newStatus,
-        UUID deliveryDriverId,
         LocalDateTime changedAt
 ) {
 }

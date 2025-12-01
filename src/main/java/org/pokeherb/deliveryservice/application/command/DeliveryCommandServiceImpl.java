@@ -34,23 +34,24 @@ public class DeliveryCommandServiceImpl implements DeliveryCommandService {
     }
 
     @Transactional
-    public void updateStatus(UUID deliveryId, DeliveryStatusUpdateMessageDto requestDto){
-        Delivery delivery = deliveryRepository.findById(deliveryId)
+    public void updateStatus(DeliveryStatusUpdateMessageDto requestDto){
+        Delivery delivery = deliveryRepository.findByOrderId(requestDto.orderId())
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
-        DeliveryStatusUpdateCommand command = requestDto.toCommand(deliveryId);
+        DeliveryStatusUpdateCommand command = requestDto.toCommand(requestDto.orderId());
         delivery.applyStatusUpdate(command);
     }
 
     @Transactional
-    public void updateDelivery(UUID deliveryId, DeliveryUpdateRequestDto requestDto){
-        Delivery delivery = deliveryRepository.findById(deliveryId)
+    public void updateDelivery(DeliveryUpdateRequestDto requestDto){
+        Delivery delivery = deliveryRepository.findByOrderId(requestDto.orderId())
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
-        DeliveryUpdateCommand command = requestDto.toCommand(deliveryId);
+
+        DeliveryUpdateCommand command = requestDto.toCommand();
         delivery.update(command);
     }
 
     @Transactional
-    public void completeDelivery(UUID deliveryId, Integer actualDurationMin, Integer actualDurationKm) {
+    public void completeDelivery(UUID deliveryId, Double actualDurationMin, Double actualDurationKm) {
         Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(DeliveryErrorCode.DELIVERY_NOT_FOUND));
         delivery.complete(actualDurationMin, actualDurationKm);

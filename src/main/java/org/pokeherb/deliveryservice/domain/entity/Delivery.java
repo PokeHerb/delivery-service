@@ -52,7 +52,6 @@ public class Delivery extends Auditable {
     @Column(name = "delivery_status", length = 30)
     private DeliveryStatus deliveryStatus;
 
-    // ERD 오타(delivey_driver_id) → DB 컬럼 그대로 따라감
     @Column(name = "delivery_driver_id")
     private UUID deliveryDriverId;
 
@@ -63,10 +62,30 @@ public class Delivery extends Auditable {
     private String receiverName;
 
     @Column(name = "actual_duration_min")
-    private Integer actualDurationMin;
+    private Double actualDurationMin;
 
     @Column(name = "actual_duration_km")
-    private Integer actualDurationKm;
+    private Double actualDurationKm;
+
+    @Column(name = "expected_duration_min")
+    private Double expectedDurationMin;
+    //finalDuration
+    @Column(name = "expected_distance_km")
+    private Double expectedDistanceKm;
+    //finalDistance
+    private UUID productId;
+
+    @Column
+    private LocalDateTime dueAt;
+
+    @Column
+    private UUID orderUserId;
+
+    @Column
+    private String productName;
+
+    @Column
+    private UUID driverId;
 
     @Builder
     private Delivery(
@@ -81,8 +100,15 @@ public class Delivery extends Auditable {
             UUID deliveryDriverId,
             UUID receiverSlackId,
             String receiverName,
-            Integer actualDurationMin,
-            Integer actualDurationKm
+            Double actualDurationMin,
+            Double actualDurationKm,
+            Double expectedDurationMin,
+            Double expectedDistanceKm,
+            UUID productId,
+            LocalDateTime dueAt,
+            UUID orderUserId,
+            String productName,
+            UUID driverId
     ) {
         this.id = id;
         this.orderId = orderId;
@@ -97,6 +123,13 @@ public class Delivery extends Auditable {
         this.receiverName = receiverName;
         this.actualDurationMin = actualDurationMin;
         this.actualDurationKm = actualDurationKm;
+        this.expectedDurationMin = expectedDurationMin;
+        this.expectedDistanceKm = expectedDistanceKm;
+        this.productId = productId;
+        this.dueAt = dueAt;
+        this.orderUserId = orderUserId;
+        this.productName = productName;
+        this.driverId = driverId;
     }
 
     /* ============================================================
@@ -106,14 +139,7 @@ public class Delivery extends Auditable {
     public static Delivery create(DeliveryCreateCommand command) {
         return Delivery.builder()
                 .orderId(command.orderId())
-                .sequence(command.sequence())
-                .startHubId(command.startHubId())
-                .endHubId(command.endHubId())
-                .endVendorId(command.endVendorId())
-                .endVendorAddress(command.endVendorAddress())
                 .deliveryStatus(DeliveryStatus.CREATED)
-                .receiverName(command.receiverName())
-                .receiverSlackId(command.receiverSlackId())
                 .build();
     }
 
@@ -122,44 +148,69 @@ public class Delivery extends Auditable {
      ============================================================ */
     public void update(DeliveryUpdateCommand command) {
         ensureNotDeleted();
+
         if (!this.deliveryStatus.isEditable()) {
             throw new CustomException(DeliveryErrorCode.CANNOT_UPDATE_DELIVERY);
         }
-
-        if (command.receiverName() != null && !command.receiverName().isBlank()) {
-            this.receiverName = command.receiverName();
+        if (command.sequence() != null) {
+            this.sequence = command.sequence();
+        }
+        if (command.startHubId() != null) {
+            this.startHubId = command.startHubId();
+        }
+        if (command.endHubId() != null) {
+            this.endHubId = command.endHubId();
+        }
+        if (command.endVendorId() != null) {
+            this.endVendorId = command.endVendorId();
+        }
+        if (command.endVendorAddress() != null && !command.endVendorAddress().isBlank()) {
+            this.endVendorAddress = command.endVendorAddress();
         }
         if (command.receiverSlackId() != null) {
             this.receiverSlackId = command.receiverSlackId();
         }
-        if (command.endVendorAddress() != null) {
-            this.endVendorAddress = command.endVendorAddress();
+        if (command.receiverName() != null && !command.receiverName().isBlank()) {
+            this.receiverName = command.receiverName();
         }
-
+        if (command.expectedDurationMin() != null) {
+            this.expectedDurationMin = command.expectedDurationMin();
+        }
+        if (command.expectedDistanceKm() != null) {
+            this.expectedDistanceKm = command.expectedDistanceKm();
+        }
+        if (command.productId() != null) {
+            this.productId = command.productId();
+        }
+        if (command.dueAt() != null) {
+            this.dueAt = command.dueAt();
+        }
+        if (command.orderUserId() != null) {
+            this.orderUserId = command.orderUserId();
+        }
+        if (command.productName() != null && !command.productName().isBlank()) {
+            this.productName = command.productName();
+        }
+        if (command.driverId() != null) {
+            this.driverId = command.driverId();
+        }
         this.updatedAt = LocalDateTime.now();
     }
 
+
     public void applyStatusUpdate(DeliveryStatusUpdateCommand command) {
         ensureNotDeleted();
-
         DeliveryStatus newStatus = command.newStatus();
-
         if (!this.deliveryStatus.canTransitionTo(newStatus)) {
             throw new CustomException(DeliveryErrorCode.INVALID_STATUS_TRANSITION);
         }
-
         this.deliveryStatus = newStatus;
-
-        if (command.deliveryDriverId() != null) {
-            this.deliveryDriverId = command.deliveryDriverId();
-        }
-
         this.updatedAt = command.changedAt() != null
                 ? command.changedAt()
                 : LocalDateTime.now();
     }
 
-    public void complete(Integer durationMin, Integer distanceKm) {
+    public void complete(Double durationMin, Double distanceKm) {
         ensureNotDeleted();
 
         if (!this.deliveryStatus.canComplete()) {

@@ -1,7 +1,6 @@
 package org.pokeherb.deliveryservice.domain.repository;
 
 import org.pokeherb.deliveryservice.domain.entity.Delivery;
-import org.pokeherb.deliveryservice.domain.entity.DeliveryStatus;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -11,5 +10,5 @@ public interface DeliveryRepository{
 
     Optional<Delivery> findById(UUID deliveryId);
 
-    Optional<Delivery> findByDeliveryStatus(DeliveryStatus status);
+    Optional<Delivery> findByOrderId(UUID orderId);
 }
